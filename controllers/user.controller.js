@@ -1,23 +1,13 @@
 const fileService = require("../services/file.service");
 
-
 module.exports = {
   getAllUsers: async (req, res) => {
-    const usersFromService = await fileServicervice.getUser();
+    const usersFromService = await fileService.getUser();
     res.json(usersFromService);
   },
 
   createUser: async (req, res) => {
-    const { name, age } = req.body;
-    console.log("name:", name);
-    console.log("age:", age);
-    if (Number.isNaN(+age) || age <= 0) {
-      res.status(400).json("wrong user age");
-      return;
-    }
-
-    const user = await fileService.addUser({ name, age });
-
+    const user = await fileService.addUser(req.body);
     res.status(201).json(user);
   },
 

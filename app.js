@@ -1,7 +1,9 @@
 const express = require("express");
+require('dotenv').config()
 
-const userController = require("./controllers/user.controller");
+
 const userRouter= require("./routes/user.router")
+const {PORT} = require("./configs/config")
 
 const app = express();
 
@@ -11,6 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRouter);
 
 
-app.listen(5000, () => {
-  console.log("app listen 5000");
+app.listen(PORT, () => {
+  console.log(`app listen ${PORT}`);
 });
