@@ -1,9 +1,11 @@
 const express = require("express");
+const mongoose = require('mongoose');
 
 require("dotenv").config();
 
 const {userRouter }= require("./routes");
-const { PORT } = require("./configs/config");
+const { PORT, MONGO_URL } = require("./configs/config");
+const mainHandler = require("./errors/mainHandler");
 
 const app = express();
 
@@ -12,6 +14,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRouter);
 
+app.use('*', (req, res, next)=>{
+next(new Error('Route not found'))
+})
+
+app.use(mainHandler)
+
 app.listen(PORT, () => {
   console.log(`app listen ${PORT}`);
+  mongoose.connect(MONGO_URL);
 });
