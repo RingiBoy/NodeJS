@@ -38,5 +38,27 @@ module.exports = {
   getUserById: async(userId)=>{
     const users = await reader();
     return users.find((user=>user.id ==userId))
+  },
+  delUserById:async(userId)=>{
+    const users = await reader();
+    const index=  users.findIndex((user=>user.id ==userId));
+    if (index<0) 
+        return; 
+    const user = users[index];
+    users.splice(index, 1)
+    await writer(users);
+    return user
+  },
+  updateByUserId: async(userId,data )=>{
+    const users = await reader();
+    const index=  users.findIndex((user=>user.id ==userId));
+    if (index<0) 
+        return; 
+    users[index] = {...users[index], ...data};
+    
+    await writer(users);
+    return users[index] 
   }
 };
+
+

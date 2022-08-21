@@ -1,6 +1,5 @@
 [
-  { "name": "fox", "age": 44, "id": 1 },
-  { "name": "fox", "age": 44, "id": 2 },
-  { "name": "delete", "age": 44, "id": 3 },
-  { "name": "dima", "age": 6, "id": 4 }
+  { "name": "dimas", "age": 6, "id": 4 },
+  { "name": "Alesander", "age": 36, "id": 5 },
+  { "name": "Juliya", "age": 33, "id": 6 }
 ]
