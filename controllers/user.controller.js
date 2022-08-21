@@ -1,4 +1,5 @@
 const fileService = require("../services/file.service");
+const { statusCodes } = require('../constants');
 
 module.exports = {
   getAllUsers: async (req, res) => {
@@ -8,20 +9,20 @@ module.exports = {
 
   createUser: async (req, res) => {
     const user = await fileService.addUser(req.body);
-    res.status(201).json(user);
+    res.status(statusCodes.CREATE).json(user);
   },
 
   getUserById: async (req, res) => {
     const { userId } = req.params;
 
     if (Number.isNaN(+userId) || +userId < 0) {
-      res.status(400).json("Wrong user id");
+      res.status(statusCodes.BAD_REQUEST).json("Wrong user id");
       return;
     }
 
     const user = await fileService.getUserById(+userId);
     if (!user) {
-      res.status(404).json("user not found");
+      res.status(statusCodes.NOT_FOUND).json("user not found");
       return;
     }
 
@@ -32,17 +33,17 @@ module.exports = {
     const { userId } = req.params;
 
     if (Number.isNaN(+userId) || +userId < 0) {
-      res.status(400).json("Wrong user id");
+      res.status(statusCodes.BAD_REQUEST).json("Wrong user id");
       return;
     }
 
     const user = await fileService.delUserById(+userId);
     if (!user) {
-      res.status(404).json("user not found");
+      res.status(statusCodes.NOT_FOUND).json("user not found");
       return;
     }
 
-    res.sendStatus(204);
+    res.sendStatus(statusCodes.NO_CONTENT);
   },
 
   updateUser: async (req, res) => {
@@ -50,7 +51,7 @@ module.exports = {
     const { name, age } = req.body;
 
     if (Number.isNaN(+userId) || +userId < 0) {
-      res.status(400).json("Wrong user id");
+      res.status(statusCodes.NOT_FOUND).json("Wrong user id");
       return;
     }
     const userObject = {};
@@ -60,10 +61,10 @@ module.exports = {
     const user = await fileService.updateByUserId(+userId, userObject);
 
     if (!user) {
-      res.status(404).json("user not found");
+      res.status(statusCodes.NOT_FOUND).json("user not found");
       return;
     }
 
-    res.status(201).json(user);
+    res.status(statusCodes.NO_CONTENT).json(user);
   },
 };
