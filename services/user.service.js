@@ -1,15 +1,20 @@
-const User = require("../dataBAse/User")
+const User = require("../dataBAse/User");
 
-module.exports={
-    createUser(userObject){
-        return User.create(userObject)
-    },
+module.exports = {
+  createUser(userObject) {
+    console.log(userObject);
+    return User.create(userObject);
+  },
 
-    updateUserById(userId, newUserObject){
-        return User.updateOne({_id:userId}, newUserObject, {new:true})
-    },
+  getOneByParams(filter) {
+    return User.findOne(filter);
+  },
 
-    deleteUserById(userId){
-        return User.deleteOne({_id:userId});
-    }
-}
+  updateUserById(userId, newUserObject) {
+    return User.updateOne({ _id: userId }, newUserObject, { new: true });
+  },
+
+  deleteUserById(userId) {
+    return User.deleteOne({ _id: userId });
+  },
+};
