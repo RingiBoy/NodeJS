@@ -10,6 +10,10 @@ module.exports = {
     return User.findOne(filter);
   },
 
+  getOneById(id) {
+    return User.findById(id);
+  },
+
   updateUserById(userId, newUserObject) {
     return User.updateOne({ _id: userId }, newUserObject, { new: true });
   },
