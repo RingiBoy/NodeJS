@@ -8,13 +8,15 @@ module.exports = {
       const { name, age } = req.body;
 
       if (Number.isNaN(+age) || age <= 0) {
-        throw new apiErorr("wrong user age", statusCode.BAD_REQUEST);
+        return next(new apiErorr("wrong user age", statusCode.BAD_REQUEST));
       }
 
       if (name.length < 2) {
-        throw new apiErorr(
-          "wrong user name. Name must to be more on 2 point",
-          statusCode.BAD_REQUEST
+        return next(
+          new apiErorr(
+            "wrong user name. Name must to be more on 2 point",
+            statusCode.BAD_REQUEST
+          )
         );
       }
       next();
@@ -25,12 +27,14 @@ module.exports = {
   checkIsUserEmailUniq: async (req, res, next) => {
     try {
       const { email } = req.body;
-      console.log(req.user);  
+      const { userId } = req.params;
+      console.log(req.user);
 
-      const userByEmail = await userService.getOneById({ email });
-
-      if (userByEmail) {
-        return next(new apiErorr("this email is use", statusCode.BAD_REQUEST));
+      const userByEmail = await userService.getOneByParams({ email });
+      // userByEmail._id = _id: new ObjectId("630478b3124b56aa133e576d")
+      // userByEmail._id.toString() = "630478b3124b56aa133e576d"
+      if (userByEmail && userByEmail._id.toString() !== userId) {
+        return next(new apiErorr("this email is use", statusCode.CONFLICT));
       }
 
       next();
@@ -38,19 +42,22 @@ module.exports = {
       next(error);
     }
   },
-  isUserPresent: async (req, res, next) => {
-    try {
-      const { userId } = req.params;
+  isUserPresent: (from='params') => {
+    return async (req, res, next) => {
+      try {
+        // const { userId } = req.params;
+        const { userId } = req[from];
 
-      const user = await userService.getOneById(userId);
+        const user = await userService.getOneById(userId);
 
-      if (!user) {
-        return next(new apiErorr("User not found", statusCode.NOT_FOUND));
+        if (!user) {
+          return next(new apiErorr("User not found", statusCode.NOT_FOUND));
+        }
+        req.user = user;
+        next();
+      } catch (error) {
+        next(error);
       }
-      req.user = user;
-      next();
-    } catch (error) {
-      next(error);
-    }
+    };
   },
 };
