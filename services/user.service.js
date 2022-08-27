@@ -15,7 +15,7 @@ module.exports = {
   },
 
   getOneById(id) {
-    return User.findById(id);
+    return User.findById(id).select(['+cars']);
   },
 
   updateUserById(userId, newUserObject) {

@@ -1,13 +1,14 @@
 const { statusCode } = require("../constants");
 
-const { carService } = require("../services");
+const { carService, userService } = require("../services");
 
 module.exports = {
   createCar: async (req, res, next) => {
     try {
-      const { _id } = req.user;
-      console.log(req.body);
+      const { _id, cars} = req.user;
+      console.log(req.user);
       const car = await carService.createCar({ ...req.body, user: _id });
+       await userService.updateUserById(_id, { cars: [...cars, car._id] });
       res.status(statusCode.CREATE).json(car);
     } catch (error) {
       next(error);
@@ -16,8 +17,8 @@ module.exports = {
 
   getCarById: async (req, res, next) => {
     try {
-      
-      const { car } = req.params;
+
+      const { car } = req;
 
       // const car = await fileService.getCarById(+carId);
       // const car = await Car.findById(carId);
