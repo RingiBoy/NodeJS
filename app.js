@@ -1,32 +1,40 @@
 const express = require("express");
-const users = require("./dataBAse/users.json");
 
 const app = express();
 
+const fileService = require("./services/file.service");
+
+// console.log("my folder of project is:", cwd());
+
 app.use(express.json());
 
-app.get("/users", (req, res) => {
+app.get("/users", async (req, res) => {
+  const users = await fileService.readDB();
   res.json(users);
 });
-app.get("/users/:id", (req, res) => {
-  const userIndex = +req.params.id;
 
-  console.log("userIndex:", userIndex);
-  if (userIndex < 0 || isNaN(userIndex)) {
-    res.status(400).json("please input valid id");
-    return;
+app.post("/users", async (req, res) => {
+  const { name, age } = req.body;
+  
+  if (!Number.isInteger(age)|| age < 0) {
+    return res.status(400).json("set valid age");
   }
-  const user = users[userIndex];
+  if (!name || name.length < 3) {
+    return res.status(400).json("set valid name");
+  }
 
-  if (!user) {
-    res.status(404).json("please input valid id");
-    return;
-  }
-  res.json(users[userIndex]);
+  const users = await fileService.readDB();
+  
+  const newUser = {
+    ...req.body,
+    id:new Date().valueOf()
+    // id: users.length ? users[users.length - 1].id + 1 : 1
+  };
+  
+  await fileService.pushToDB([...users, newUser]);
+
+  res.json(newUser);
 });
-
-
-
 
 app.listen(5000, () => {
   console.log("app listen 5000");
