@@ -15,8 +15,8 @@ app.get("/users", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   const { name, age } = req.body;
-  
-  if (!Number.isInteger(age)|| age < 0) {
+
+  if (!Number.isInteger(age) || age < 0) {
     return res.status(400).json("set valid age");
   }
   if (!name || name.length < 3) {
@@ -24,13 +24,13 @@ app.post("/users", async (req, res) => {
   }
 
   const users = await fileService.readDB();
-  
+
   const newUser = {
     ...req.body,
-    id:new Date().valueOf()
+    id: new Date().valueOf(),
     // id: users.length ? users[users.length - 1].id + 1 : 1
   };
-  
+
   await fileService.pushToDB([...users, newUser]);
 
   res.json(newUser);
