@@ -48,13 +48,28 @@ app.put("/users/:userId", async (req, res) => {
 
   const { userId } = req.params;
   const users = await fileService.readDB();
-  const updateUsers = await users.find((user) =>
+  const updateUsers = await users.map((user) =>
     user.id === +userId
-      ? { ...user, name: req.body.name, age: req.body.age }
+      ? {name: req.body.name, age: req.body.age , id:user.id}
       : user
   );
 
-  await fileService.pushToDB([updateUsers]);
+  await fileService.pushToDB(updateUsers);
+  res.status(201).json(updateUsers);
+});
+
+app.delete("/users/:userId", async (req, res) => {
+  // console.log('put', req.body);
+
+  const { userId } = req.params;
+  const users = await fileService.readDB();
+  const updateUsers = await users.filter((user) =>{
+  if(user.id !== +userId)
+  return user}
+  
+);
+
+  await fileService.pushToDB(updateUsers);
   res.status(201).json(updateUsers);
 });
 
