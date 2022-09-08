@@ -33,7 +33,29 @@ app.post("/users", async (req, res) => {
 
   await fileService.pushToDB([...users, newUser]);
 
-  res.json(newUser);
+  res.status(201).json(newUser);
+});
+
+app.get("/users/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const users = await fileService.readDB();
+  const user = await users.find((user) => user.id === +userId);
+  res.status(201).json(user);
+});
+
+app.put("/users/:userId", async (req, res) => {
+  // console.log('put', req.body);
+
+  const { userId } = req.params;
+  const users = await fileService.readDB();
+  const updateUsers = await users.find((user) =>
+    user.id === +userId
+      ? { ...user, name: req.body.name, age: req.body.age }
+      : user
+  );
+
+  await fileService.pushToDB([updateUsers]);
+  res.status(201).json(updateUsers);
 });
 
 app.listen(5000, () => {
