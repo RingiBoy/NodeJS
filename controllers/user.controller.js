@@ -8,12 +8,7 @@ module.exports = {
   createUser: async (req, res) => {
     const { name, age } = req.body;
 
-    if (!Number.isInteger(age) || age < 0) {
-      return res.status(400).json("set valid age");
-    }
-    if (!name || name.length < 3) {
-      return res.status(400).json("set valid name");
-    }
+    
 
     const users = await fileService.readDB();
 
