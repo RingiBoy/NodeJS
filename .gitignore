@@ -2,3 +2,4 @@
 node_modules
 services/old_file.service_old.js
 services/index.js
+/.env
